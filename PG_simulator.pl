@@ -179,6 +179,7 @@ $allvar_cache[1]=0;
 #$rng=Math::GSL::RNG->new;
 
 my @vcfline;
+my %ps;$ps{-1}=0;$ps{0}=0;$ps{1}=0;$ps{2}=0;$ps{3}=0;$ps{4}=0;
 while($pointers[0]||$pointers[1]||scalar(keys %NV)||scalar(keys %SV)||scalar(keys %PV)){
 	$vcfline[0]='chr0';
 	$vcfline[1]='0';
@@ -383,6 +384,10 @@ while($pointers[0]||$pointers[1]||scalar(keys %NV)||scalar(keys %SV)||scalar(key
 		$vcfline[4]=uc($vcfline[4]);
 		print VCFOUT join("\t",@vcfline)."\n";
 	}
+	$ps{$p}++;
+	if($p == -1){
+		print STDERR "$pointers[0]$pointers[1]$currentCHR\t$currentPOS\t$pointers[2]\t$pointers[3]\t$pointers[4]\n$ps{-1}\t$ps{0}\t$ps{1}\t$ps{2}\t$ps{3}\t$ps{4}\n";
+	}
 }
 
 close(COM);
@@ -545,7 +550,10 @@ sub XYM_trans {
 
 sub XYM_trans_rev {
 	$chr=shift;
-	if ($chr==23){
+	if ($chr =~ /^[XYM]/){
+		return 'chr'.$chr;
+	}
+	elsif ($chr==23){
 		return 'chrX';
 	}
 	elsif ($chr==24){

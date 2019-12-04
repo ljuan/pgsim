@@ -423,15 +423,15 @@ open(NVSIM,">$ARGV[1].nv.loc") || die;
 foreach $chr (@chrs){
 	$modLoc = 0;
 	while($nvloc<@NovelLoc || $cnvloc<@CodingLoc){
-		if((!exists($mod{$chr->[0]}) || $modLoc>=@{$mod{$chr->[0]}}) && $NovelLoc[$nvloc]-$nvOffset<=$chr->[1]){
+		if($nvloc<@NovelLoc && (!exists($mod{$chr->[0]}) || $modLoc>=@{$mod{$chr->[0]}}) && $NovelLoc[$nvloc]-$nvOffset<=$chr->[1]){
 			print NVSIM "$chr->[0]\t".($NovelLoc[$nvloc]-$nvOffset)."\tNCNV\n";
 			$nvloc++;
 		}elsif((!exists($mod{$chr->[0]}) || $modLoc>=@{$mod{$chr->[0]}}) && $NovelLoc[$nvloc]-$nvOffset>$chr->[1]){
 			last;
-		}elsif($NovelLoc[$nvloc]-$nvOffset<=$chr->[1] && $modLoc<@{$mod{$chr->[0]}} && $NovelLoc[$nvloc]-$nvOffset<=$mod{$chr->[0]}[$modLoc][0]){
+		}elsif($nvloc<@NovelLoc && $NovelLoc[$nvloc]-$nvOffset<=$chr->[1] && $modLoc<@{$mod{$chr->[0]}} && $NovelLoc[$nvloc]-$nvOffset<=$mod{$chr->[0]}[$modLoc][0]){
 			print NVSIM "$chr->[0]\t".($NovelLoc[$nvloc]-$nvOffset)."\tNCNV\n";
 			$nvloc++;
-		}elsif($NovelLoc[$nvloc]-$nvOffset<=$chr->[1] && $modLoc<@{$mod{$chr->[0]}} && $NovelLoc[$nvloc]-$nvOffset>$mod{$chr->[0]}[$modLoc][0] && $NovelLoc[$nvloc]-$nvOffset<=$mod{$chr->[0]}[$modLoc][1]){
+		}elsif($nvloc<@NovelLoc && $NovelLoc[$nvloc]-$nvOffset<=$chr->[1] && $modLoc<@{$mod{$chr->[0]}} && $NovelLoc[$nvloc]-$nvOffset>$mod{$chr->[0]}[$modLoc][0] && $NovelLoc[$nvloc]-$nvOffset<=$mod{$chr->[0]}[$modLoc][1]){
 			$nvloc++;
 		}elsif($cnvloc<@CodingLoc && $modLoc<@{$mod{$chr->[0]}} && $CodingLoc[$cnvloc]-$cnvOffset<=$mod{$chr->[0]}[$modLoc][1]-$mod{$chr->[0]}[$modLoc][0]){
 			print NVSIM "$chr->[0]\t".($CodingLoc[$cnvloc]-$cnvOffset+$mod{$chr->[0]}[$modLoc][0])."\tCDSNV\n";
